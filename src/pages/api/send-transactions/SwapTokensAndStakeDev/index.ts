@@ -186,8 +186,12 @@ export const POST: APIRoute = async ({ request }) => {
 				.catch((err: Error) => err),
 	)
 
+	const multipliedGasLimit = whenNotError(gasLimit, (gas) =>
+		BigInt(new BigNumber(gas.toString()).times(1.2).dp(0).toFixed()),
+	)
+
 	const unsignedTx = await whenNotErrorAll(
-		[contract, props, gasLimit, feeData],
+		[contract, props, multipliedGasLimit, feeData],
 		([cont, { args }, _gasLimit, { maxFeePerGas, maxPriorityFeePerGas }]) =>
 			cont.mintFor
 				.populateTransaction(
