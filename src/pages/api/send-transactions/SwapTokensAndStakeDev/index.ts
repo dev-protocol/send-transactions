@@ -76,8 +76,8 @@ export const POST: APIRoute = async ({ request }) => {
 		chainId === 137
 			? agentAddresses.polygon.mainnet.swapArbitraryTokens.swap
 			: chainId === 80001
-			? agentAddresses.polygon.mumbai.swapArbitraryTokens.swap
-			: new Error(`unexpected chainId: ${chainId}`),
+			  ? agentAddresses.polygon.mumbai.swapArbitraryTokens.swap
+			  : new Error(`unexpected chainId: ${chainId}`),
 	)
 
 	const wallet = whenNotError(
@@ -108,8 +108,8 @@ export const POST: APIRoute = async ({ request }) => {
 			chainId === 137
 				? 'https://gasstation.polygon.technology/v2'
 				: chainId === 80001
-				? 'https://gasstation-testnet.polygon.technology/v2'
-				: new Error('Cannot found gas stasion URL')
+				  ? 'https://gasstation-testnet.polygon.technology/v2'
+				  : new Error('Cannot found gas stasion URL')
 		const gsRes = await whenNotError(url, (endpoint) =>
 			fetch(endpoint).catch((err: Error) => err),
 		)
