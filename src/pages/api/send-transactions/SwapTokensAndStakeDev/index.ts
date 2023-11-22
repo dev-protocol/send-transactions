@@ -259,7 +259,7 @@ export const POST: APIRoute = async ({ request }) => {
 	)
 
 	// eslint-disable-next-line functional/no-expression-statements
-	console.log({ tx, result })
+	console.log({ tx, result, props })
 
 	return result instanceof Error
 		? new Response(json({ message: 'error', error: result.message }), {
