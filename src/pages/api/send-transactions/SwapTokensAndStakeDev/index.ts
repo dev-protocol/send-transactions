@@ -42,10 +42,12 @@ export const POST: APIRoute = async ({ request }) => {
 	const authres = auth(request) ? true : new Error('authentication faild')
 
 	const {
+		requestId: requestId_,
 		rpcUrl: rpcUrl_,
 		chainId: chainId_,
 		args: args_,
 	} = ((await request.json()) as {
+		requestId?: string
 		rpcUrl?: string
 		chainId?: number
 		args?: {
@@ -65,6 +67,7 @@ export const POST: APIRoute = async ({ request }) => {
 		authres,
 		always(
 			whenDefinedAll([rpcUrl_, chainId_, args_], ([rpcUrl, chainId, args]) => ({
+				requestId: requestId_,
 				rpcUrl,
 				chainId,
 				args,
@@ -211,10 +214,10 @@ export const POST: APIRoute = async ({ request }) => {
 	)
 
 	const prevTransaction = await whenNotErrorAll(
-		[unsignedTx, redis],
-		([_tx, db]) =>
+		[unsignedTx, redis, props],
+		([_tx, db, { requestId }]) =>
 			whenDefinedAll([_tx.to, _tx.data], ([to, data]) =>
-				db.get(generateTransactionKey(to, data)),
+				db.get(generateTransactionKey(to, data, requestId)),
 			) ??
 			new Error(
 				'Missing TransactionRequest field to get the prev transaction: .to, .data',
@@ -241,10 +244,13 @@ export const POST: APIRoute = async ({ request }) => {
 	)
 
 	const saved = await whenNotErrorAll(
-		[tx, redis],
-		([_tx, db]) =>
+		[tx, redis, props],
+		([_tx, db, { requestId }]) =>
 			whenDefinedAll([_tx.to, _tx.data], ([to, data]) =>
-				db.set(generateTransactionKey(to, data), new Date().getTime()),
+				db.set(
+					generateTransactionKey(to, data, requestId),
+					new Date().getTime(),
+				),
 			) ??
 			new Error(
 				'Missing TransactionResponse field to save the transaction: .to, .data',
