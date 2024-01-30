@@ -1,15 +1,17 @@
 import type { UndefinedOr } from '@devprotocol/util-ts'
 import { whenDefined } from '@devprotocol/util-ts'
-import type { HDNodeWallet } from 'ethers'
-import { JsonRpcProvider, Wallet } from 'ethers'
+import { JsonRpcProvider, Wallet, NonceManager } from 'ethers'
 
 export const createWallet = ({
 	rpcUrl,
 }: {
 	rpcUrl: string
-}): UndefinedOr<HDNodeWallet> => {
+}): UndefinedOr<NonceManager> => {
 	const { MNEMONIC } = import.meta.env
 
 	const provider = new JsonRpcProvider(rpcUrl)
-	return whenDefined(MNEMONIC, (key) => Wallet.fromPhrase(key, provider))
+	return whenDefined(
+		MNEMONIC,
+		(key) => new NonceManager(Wallet.fromPhrase(key, provider)),
+	)
 }
