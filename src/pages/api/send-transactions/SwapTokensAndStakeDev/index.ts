@@ -3,40 +3,20 @@ import abi from './abi'
 import { json, headers } from 'utils/json'
 import { agentAddresses } from '@devprotocol/dev-kit/agent'
 import { createWallet } from 'utils/wallet'
-import { Contract, JsonRpcProvider, TransactionResponse } from 'ethers'
+import { Contract, type TransactionResponse } from 'ethers'
 import { auth } from 'utils/auth'
 import {
 	whenDefinedAll,
 	whenNotErrorAll,
 	whenNotError,
+	type ErrorOr,
 } from '@devprotocol/util-ts'
 import { always } from 'ramda'
-import fetch from 'cross-fetch'
-import BigNumber from 'bignumber.js'
 import { createClient } from 'redis'
 import { generateTransactionKey } from 'utils/db'
+import { send } from 'utils/tx'
 
 const { REDIS_URL, REDIS_USERNAME, REDIS_PASSWORD } = import.meta.env
-
-type GasStaionReturnValue = Readonly<{
-	safeLow: Readonly<{
-		maxPriorityFee: number
-		maxFee: number
-	}>
-	standard: Readonly<{
-		maxPriorityFee: number
-		maxFee: number
-	}>
-	fast: Readonly<{
-		maxPriorityFee: number
-		maxFee: number
-	}>
-	estimatedBaseFee: number
-	blockTime: number
-	blockNumber: number
-}>
-
-const WeiPerGwei = '1000000000'
 
 export const POST: APIRoute = async ({ request }) => {
 	const authres = auth(request) ? true : new Error('authentication faild')
@@ -109,140 +89,26 @@ export const POST: APIRoute = async ({ request }) => {
 				.catch((err) => new Error(err)),
 	)
 
-	const feeDataFromGS = await whenNotError(props, async ({ chainId }) => {
-		const url =
-			chainId === 137
-				? 'https://gasstation.polygon.technology/v2'
-				: chainId === 80001
-					? 'https://gasstation-testnet.polygon.technology/v2'
-					: new Error('Cannot found gas stasion URL')
-		const gsRes = await whenNotError(url, (endpoint) =>
-			fetch(endpoint).catch((err: Error) => err),
-		)
-		const result = await whenNotError(gsRes, (res) =>
-			res
-				.json()
-				.then((x) => x as GasStaionReturnValue)
-				.catch((err: Error) => err),
-		)
-		const multiplied = whenNotError(
-			result,
-			(_data) =>
-				whenDefinedAll(
-					[_data.fast.maxFee, _data.fast.maxPriorityFee],
-					([maxFeePerGas, maxPriorityFeePerGas]) => ({
-						maxFeePerGas: new BigNumber(maxFeePerGas)
-							.times(WeiPerGwei)
-							.times(1.2)
-							.dp(0)
-							.toFixed(),
-						maxPriorityFeePerGas: new BigNumber(maxPriorityFeePerGas)
-							.times(WeiPerGwei)
-							.times(1.2)
-							.dp(0)
-							.toFixed(),
-					}),
-				) ?? new Error('Missing fee data: fast.maxFee, fast.maxPriorityFee'),
-		)
-		return multiplied
-	})
-
-	const feeData =
-		feeDataFromGS instanceof Error
-			? await whenNotError(props, async ({ rpcUrl }) => {
-					const fromChain = await new JsonRpcProvider(rpcUrl)
-						.getFeeData()
-						.catch((err: Error) => err)
-					const multiplied = whenNotError(
-						fromChain,
-						(_data) =>
-							whenDefinedAll(
-								[_data.maxFeePerGas, _data.maxPriorityFeePerGas],
-								([maxFeePerGas, maxPriorityFeePerGas]) => ({
-									maxFeePerGas: new BigNumber(maxFeePerGas.toString())
-										.times(1.2)
-										.dp(0)
-										.toFixed(),
-									maxPriorityFeePerGas: new BigNumber(
-										maxPriorityFeePerGas.toString(),
-									)
-										.times(1.2)
-										.dp(0)
-										.toFixed(),
-								}),
-							) ??
-							new Error('Missing fee data: maxFeePerGas, maxPriorityFeePerGas'),
-					)
-					return multiplied
-				})
-			: feeDataFromGS
-
-	const gasLimit = await whenNotErrorAll(
-		[contract, props],
-		([cont, { args }]) =>
-			cont.mintFor
-				.estimateGas(
-					args.to,
-					args.property,
-					args.payload,
-					args.gatewayAddress,
-					args.amounts,
-				)
-				.then((res) => res)
-				.catch((err: Error) => err),
-	)
-
-	const multipliedGasLimit = whenNotError(gasLimit, (gas) =>
-		BigInt(new BigNumber(gas.toString()).times(1.2).dp(0).toFixed()),
-	)
-
-	const unsignedTx = await whenNotErrorAll(
-		[contract, props, multipliedGasLimit, feeData],
-		([cont, { args }, _gasLimit, { maxFeePerGas, maxPriorityFeePerGas }]) =>
-			cont.mintFor
-				.populateTransaction(
-					args.to,
-					args.property,
-					args.payload,
-					args.gatewayAddress,
-					args.amounts,
-					{
-						gasLimit: _gasLimit,
-						maxFeePerGas,
-						maxPriorityFeePerGas,
-					},
-				)
-				.then((res) => res)
-				.catch((err: Error) => err),
-	)
-
-	const prevTransaction = await whenNotErrorAll(
-		[unsignedTx, redis, props],
-		([_tx, db, { requestId }]) =>
-			whenDefinedAll([_tx.to, _tx.data], ([to, data]) =>
-				db.get(generateTransactionKey(to, data, requestId)),
-			) ??
-			new Error(
-				'Missing TransactionRequest field to get the prev transaction: .to, .data',
-			),
-	)
-
-	const validExecutionInterval = whenNotError(prevTransaction, (ptx) => {
-		const lasttime = typeof ptx === 'string' ? Number(ptx) : undefined
-		const now = new Date().getTime()
-		const oneMin = 60000
-		const interval = now - (lasttime ?? 0)
-		return interval > oneMin
-			? true
-			: new Error(`Invalid execution interval: ${interval}ms`)
-	})
-
 	const tx = await whenNotErrorAll(
-		[wallet, unsignedTx, validExecutionInterval],
-		([wal, _tx]) =>
-			wal
-				.sendTransaction(_tx)
-				.then((res: TransactionResponse) => res)
+		[contract, wallet, props, redis],
+		([contract_, signer, { chainId, rpcUrl, args, requestId }, db]) =>
+			send({
+				contract: contract_,
+				method: 'mintFor',
+				signer,
+				chainId,
+				rpcUrl,
+				args: [
+					args.to,
+					args.property,
+					args.payload,
+					args.gatewayAddress,
+					args.amounts,
+				],
+				requestId,
+				redis: db,
+			})
+				.then((res: ErrorOr<TransactionResponse>) => res)
 				.catch((err: Error) => err),
 	)
 
