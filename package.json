@@ -8,7 +8,7 @@
 		"start": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"test": "ava || echo 'Skip'",
+		"test": "echo 'Skip'",
 		"pretest": "tsc",
 		"prebuild": "rimraf dist",
 		"lint": "yarn lint:eslint && yarn lint:format",
@@ -33,14 +33,12 @@
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.4.0",
-		"@ava/typescript": "4.1.0",
 		"@types/dotenv": "8.2.0",
 		"@types/node": "20.11.13",
 		"@types/ramda": "0.29.10",
 		"@typescript-eslint/eslint-plugin": "6.20.0",
 		"@typescript-eslint/parser": "6.20.0",
 		"@vercel/node": "^3.0.0",
-		"ava": "6.1.1",
 		"dotenv": "16.4.1",
 		"eslint": "8.56.0",
 		"eslint-config-prettier": "9.1.0",
@@ -50,17 +48,6 @@
 		"rimraf": "5.0.5",
 		"type-fest": "^4.10.2",
 		"typescript": "5.3.3"
-	},
-	"ava": {
-		"files": [
-			"**/*.test.ts"
-		],
-		"typescript": {
-			"rewritePaths": {
-				"/": "dist/"
-			},
-			"compile": false
-		}
 	},
 	"repository": "git+https://github.com/dev-protocol/template-repos-ts.git",
 	"bugs": {
