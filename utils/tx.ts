@@ -170,13 +170,12 @@ const createTx = async ({
 				})(rpcUrl)
 			: feeDataFromGS
 
-	const gasLimit =
-		(await whenNotError(contractMethod, (contMethod) =>
-			contMethod.estimateGas
-				.apply(null, [...args])
-				.then((res) => res)
-				.catch((err: Error) => err),
-		)) ?? new Error('The contract does not have the method')
+	const gasLimit = await whenNotError(contractMethod, (contMethod) =>
+		contMethod.estimateGas
+			.apply(null, [...args])
+			.then((res) => res)
+			.catch((err: Error) => err),
+	)
 
 	const multipliedGasLimit = whenNotError(gasLimit, (gas) =>
 		BigInt(new BigNumber(gas.toString()).times(multiplier).dp(0).toFixed()),
