@@ -27,7 +27,11 @@
 				"functional/functional-parameters": "off",
 				"functional/no-return-void": "off",
 				"@typescript-eslint/prefer-readonly-parameter-types": "off",
-				"@typescript-eslint/no-explicit-any": "off"
+				"@typescript-eslint/no-explicit-any": "off",
+				"functional/no-throw-statements": "off",
+				"functional/no-classes": "off",
+				"functional/no-conditional-statements": "off",
+				"functional/immutable-data": "off"
 			}
 		}
 	]
