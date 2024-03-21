@@ -10,6 +10,6 @@
 		"isolatedModules": true,
 		"allowSyntheticDefaultImports": true,
 		"skipLibCheck": true,
-		"baseUrl": ".",
-	},
+		"baseUrl": "."
+	}
 }
