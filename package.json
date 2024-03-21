@@ -8,8 +8,8 @@
 		"start": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"test": "echo 'Skip'",
-		"pretest": "tsc",
+		"test": "vitest",
+		"test:ci": "vitest --run",
 		"prebuild": "rimraf dist",
 		"lint": "yarn lint:eslint && yarn lint:format",
 		"lint:eslint": "eslint . --ext .ts,.js --fix",
@@ -47,7 +47,8 @@
 		"prettier": "3.2.4",
 		"rimraf": "5.0.5",
 		"type-fest": "^4.10.2",
-		"typescript": "5.3.3"
+		"typescript": "5.3.3",
+		"vitest": "^1.2.2"
 	},
 	"repository": "git+https://github.com/dev-protocol/template-repos-ts.git",
 	"bugs": {
