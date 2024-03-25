@@ -95,7 +95,7 @@ export const POST: APIRoute = async ({
 	console.log('@@@', { data, sbtContractAddress })
 
 	const wallet = whenNotErrorAll(
-		[data, sbtContractAddress],
+		[data],
 		([{ rpcUrl }]) => createWallet({ rpcUrl }) ?? new Error('Wallet error'),
 	)
 
