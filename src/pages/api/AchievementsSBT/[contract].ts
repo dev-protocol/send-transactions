@@ -1,7 +1,7 @@
 import { always } from 'ramda'
 import { createClient } from 'redis'
 import type { APIRoute, Params } from 'astro'
-import { Contract, isAddress, type TransactionResponse } from 'ethers'
+import { Contract, isAddress, Result, type TransactionResponse } from 'ethers'
 
 import { send } from 'utils/tx'
 import { auth } from 'utils/auth'
@@ -127,8 +127,18 @@ export const POST: APIRoute = async ({
 		},
 	)
 
+	const sbtToBeMinted = await whenNotErrorAll(
+		[contract, wallet, data, redis],
+		async ([contract_, , data_]) => {
+			return await contract_.mint
+				.staticCallResult(data_.to, encodedMetadata)
+				.then((res: Result) => contract_.decode('uint256', res))
+				.catch((err: Error) => err)
+		},
+	)
+
 	const tx = await whenNotErrorAll(
-		[contract, wallet, data, redis, encodedMetadata],
+		[contract, wallet, data, redis, encodedMetadata, sbtToBeMinted],
 		async ([
 			contract_,
 			signer,
@@ -152,8 +162,8 @@ export const POST: APIRoute = async ({
 	)
 
 	const saved = await whenNotErrorAll(
-		[tx, redis, data, sbtContractAddress],
-		([_tx, db, { reqId }]) =>
+		[tx, redis, data, sbtContractAddress, sbtToBeMinted],
+		([_tx, db, { reqId }, ,]) =>
 			whenDefinedAll([_tx.to, _tx.data], ([to, data]) =>
 				db.set(generateTransactionKey(to, data, reqId), new Date().getTime()),
 			) ??
@@ -177,5 +187,8 @@ export const POST: APIRoute = async ({
 				status: 400,
 				headers,
 			})
-		: new Response(json({ message: 'success' }), { status: 200, headers })
+		: new Response(
+				json({ message: 'success', claimedSBTTokenId: sbtToBeMinted }),
+				{ status: 200, headers },
+			)
 }
