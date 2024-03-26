@@ -1,8 +1,7 @@
 import { always } from 'ramda'
 import { createClient } from 'redis'
-import BigNumber from 'bignumber.js'
 import type { APIRoute, Params } from 'astro'
-import { Contract, isAddress, Result, type TransactionResponse } from 'ethers'
+import { Contract, isAddress, type TransactionResponse } from 'ethers'
 
 import { send } from 'utils/tx'
 import { auth } from 'utils/auth'
@@ -131,20 +130,8 @@ export const POST: APIRoute = async ({
 		},
 	)
 
-	const sbtToBeMinted = await whenNotErrorAll(
-		[contract, wallet, data, redis],
-		async ([contract_, , data_]) => {
-			return await contract_.mint
-				.staticCallResult(data_.to, encodedMetadata)
-				.then((res: Result) => res.at(0))
-				.then((res: BigNumber) => res.toString())
-				.then((res: string) => Number(res))
-				.catch((err: Error) => err)
-		},
-	)
-
 	const tx = await whenNotErrorAll(
-		[contract, wallet, data, redis, encodedMetadata, sbtToBeMinted],
+		[contract, wallet, data, redis, encodedMetadata],
 		async ([
 			contract_,
 			signer,
@@ -165,6 +152,27 @@ export const POST: APIRoute = async ({
 				.then((res: ErrorOr<TransactionResponse>) => res)
 				.catch((err: Error) => err)
 		},
+	)
+
+	const sbtMintLog = await whenNotErrorAll(
+		[contract, tx],
+		async ([contract_, tx_]) => {
+			const txReceipt = await tx_.wait(1)
+			return !txReceipt
+				? new Error('Invalid tx receipt')
+				: txReceipt.logs
+						.map((log) => contract_.interface.parseLog(log))
+						.find((log) => log?.name === 'Minted') ??
+						new Error('SBT Mint log not found')
+		},
+	)
+
+	const sbtToBeMinted = whenNotErrorAll(
+		[tx, sbtMintLog],
+		([tx_, sbtMintLog_]) =>
+			whenDefinedAll([tx_, sbtMintLog_], ([, ml]) =>
+				Number(ml.args.at(0).toString()),
+			) ?? new Error('SBT minted not found'),
 	)
 
 	const saved = await whenNotErrorAll(
