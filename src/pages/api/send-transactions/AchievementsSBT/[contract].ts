@@ -1,5 +1,6 @@
 import { always } from 'ramda'
 import { createClient } from 'redis'
+import BigNumber from 'bignumber.js'
 import type { APIRoute, Params } from 'astro'
 import { Contract, isAddress, Result, type TransactionResponse } from 'ethers'
 
@@ -72,7 +73,7 @@ export const POST: APIRoute = async ({
 											description: string
 											image: string
 											numberAttributes: NumberAttribute[]
-											stringAttirbutes: StringAttribute[]
+											stringAttributes: StringAttribute[]
 										}
 										to: string
 									},
@@ -90,9 +91,6 @@ export const POST: APIRoute = async ({
 					: _p.contract
 			}) ?? new Error('Invalid sbt contract address'),
 	)
-
-	// eslint-disable-next-line functional/no-expression-statements
-	console.log('@@@', { data, sbtContractAddress })
 
 	const wallet = whenNotErrorAll(
 		[data],
@@ -119,9 +117,15 @@ export const POST: APIRoute = async ({
 
 	const encodedMetadata = await whenNotErrorAll(
 		[contract, wallet, data, redis],
-		async ([contract_, , ,]) => {
+		async ([contract_, , { metadata }]) => {
 			return await contract_
-				.getFunction('encodeMetadata')()
+				.getFunction('encodeMetadata')(
+					metadata.name,
+					metadata.description,
+					metadata.stringAttributes,
+					metadata.numberAttributes,
+					metadata.image,
+				)
 				.then((res: string) => res)
 				.catch((err: Error) => err)
 		},
@@ -132,7 +136,9 @@ export const POST: APIRoute = async ({
 		async ([contract_, , data_]) => {
 			return await contract_.mint
 				.staticCallResult(data_.to, encodedMetadata)
-				.then((res: Result) => contract_.decode('uint256', res))
+				.then((res: Result) => res.at(0))
+				.then((res: BigNumber) => res.toString())
+				.then((res: string) => Number(res))
 				.catch((err: Error) => err)
 		},
 	)
@@ -179,12 +185,9 @@ export const POST: APIRoute = async ({
 			.catch((err: Error) => err),
 	)
 
-	// eslint-disable-next-line functional/no-expression-statements
-	console.log({ tx, result, data })
-
-	return result instanceof Error
-		? new Response(json({ message: 'error', error: result.message }), {
-				status: 400,
+	return result instanceof Error || sbtToBeMinted instanceof Error
+		? new Response(json({ message: 'Error occured', error: true }), {
+				status: 500,
 				headers,
 			})
 		: new Response(
