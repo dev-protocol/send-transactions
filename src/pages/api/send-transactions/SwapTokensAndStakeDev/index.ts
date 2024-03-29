@@ -136,10 +136,18 @@ export const POST: APIRoute = async ({ request }) => {
 	// eslint-disable-next-line functional/no-expression-statements
 	console.log({ tx, result, props })
 
+	const transaction = tx instanceof Error ? undefined : tx.toJSON()
+
 	return result instanceof Error
-		? new Response(json({ message: 'error', error: result.message }), {
-				status: 400,
+		? new Response(
+				json({ message: 'error', error: result.message, transaction }),
+				{
+					status: 400,
+					headers,
+				},
+			)
+		: new Response(json({ message: 'success', transaction }), {
+				status: 200,
 				headers,
 			})
-		: new Response(json({ message: 'success' }), { status: 200, headers })
 }
