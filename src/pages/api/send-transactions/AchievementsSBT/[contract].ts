@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-expression-statements */
 import { always } from 'ramda'
 import { createClient } from 'redis'
 import type { APIRoute, Params } from 'astro'
@@ -83,6 +84,8 @@ export const POST: APIRoute = async ({
 			}) ?? new Error('Invalid metadata'),
 	)
 
+	console.log('1', { data })
+
 	const sbtContractAddress = whenNotErrorAll(
 		[isParamValid, params],
 		([_iPV, _params]) =>
@@ -116,6 +119,8 @@ export const POST: APIRoute = async ({
 				.catch((err) => new Error(err)),
 	)
 
+	console.log('2', { redis })
+
 	const encodedMetadata = await whenNotErrorAll(
 		[contract, wallet, data, redis],
 		async ([contract_, , { metadata }]) => {
@@ -131,6 +136,8 @@ export const POST: APIRoute = async ({
 				.catch((err: Error) => err)
 		},
 	)
+
+	console.log('3', { encodedMetadata })
 
 	const tx = await whenNotErrorAll(
 		[contract, wallet, data, redis, encodedMetadata],
@@ -155,6 +162,8 @@ export const POST: APIRoute = async ({
 				.catch((err: Error) => err)
 		},
 	)
+
+	console.log('4', { tx })
 
 	const sbtMintLog = await whenNotErrorAll(
 		[contract, tx],
