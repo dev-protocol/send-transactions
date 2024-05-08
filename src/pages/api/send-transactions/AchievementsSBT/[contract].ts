@@ -124,16 +124,16 @@ export const POST: APIRoute = async ({
 	const encodedMetadata = await whenNotErrorAll(
 		[contract, wallet, data, redis],
 		async ([contract_, , { metadata }]) => {
-			return await contract_
-				.getFunction('encodeMetadata')(
-					metadata.name,
-					metadata.description,
-					metadata.stringAttributes,
-					metadata.numberAttributes,
-					metadata.image,
-				)
-				.then((res: string) => res)
-				.catch((err: Error) => err)
+			const promise = contract_.getFunction('encodeMetadata')(
+				metadata.name,
+				metadata.description,
+				metadata.stringAttributes,
+				metadata.numberAttributes,
+				metadata.image,
+			)
+			console.log('2.a', { contract_, promise })
+
+			return await promise.then((res: string) => res).catch((err: Error) => err)
 		},
 	)
 
