@@ -84,7 +84,11 @@ export const POST: APIRoute = async ({
 			}) ?? new Error('Invalid metadata'),
 	)
 
-	console.log('1', { data })
+	console.log('1', {
+		data,
+		n: !(data instanceof Error) && data?.metadata.numberAttributes,
+		s: !(data instanceof Error) && data?.metadata?.stringAttributes,
+	})
 
 	const sbtContractAddress = whenNotErrorAll(
 		[isParamValid, params],
