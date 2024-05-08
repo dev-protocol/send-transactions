@@ -145,7 +145,7 @@ export const POST: APIRoute = async ({
 			)
 			console.log('2.b', { contract_, promise })
 
-			return await promise.then((res: string) => res).catch((err: Error) => err)
+			return await promise
 		},
 	)
 
