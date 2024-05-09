@@ -47,7 +47,7 @@ describe('send', () => {
 	describe('Normal cases', () => {
 		const redis = createClient()
 		const provider = new JsonRpcProvider(
-			'https://polygon-mumbai-bor-rpc.publicnode.com',
+			'https://polygon-amoy-bor-rpc.publicnode.com',
 		)
 		const signer = Wallet.createRandom().connect(provider)
 		vi.spyOn(signer, 'sendTransaction').mockImplementation(
@@ -76,7 +76,7 @@ describe('send', () => {
 				method: 'transfer',
 				signer,
 				chainId: 80001,
-				rpcUrl: 'https://polygon-mumbai-bor-rpc.publicnode.com/', // Mumbai
+				rpcUrl: 'https://polygon-amoy-bor-rpc.publicnode.com', // Amoy.
 				args: [signer.address, 0n],
 				requestId: 'id',
 				redis,
