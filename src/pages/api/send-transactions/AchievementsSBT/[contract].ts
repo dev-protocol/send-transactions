@@ -188,14 +188,16 @@ export const POST: APIRoute = async ({
 			),
 	)
 
-	const result = await whenNotErrorAll([redis, saved], ([db]) =>
+	const result = await whenNotErrorAll([redis], ([db]) =>
 		db
 			.quit()
 			.then((x) => x)
 			.catch((err: Error) => err),
 	)
 
-	return result instanceof Error || sbtToBeMinted instanceof Error
+	return result instanceof Error ||
+		sbtToBeMinted instanceof Error ||
+		saved instanceof Error
 		? new Response(json({ message: 'Error occured', error: true }), {
 				status: 500,
 				headers,
