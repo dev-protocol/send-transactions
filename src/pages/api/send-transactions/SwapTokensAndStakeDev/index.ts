@@ -126,7 +126,7 @@ export const POST: APIRoute = async ({ request }) => {
 			),
 	)
 
-	const result = await whenNotErrorAll([redis, saved], ([db]) =>
+	const result = await whenNotErrorAll([redis], ([db]) =>
 		db
 			.quit()
 			.then((x) => x)
@@ -134,7 +134,7 @@ export const POST: APIRoute = async ({ request }) => {
 	)
 
 	// eslint-disable-next-line functional/no-expression-statements
-	console.log({ tx, result, props })
+	console.log({ tx, result, props, saved })
 
 	const transaction = tx instanceof Error ? undefined : tx.toJSON()
 
