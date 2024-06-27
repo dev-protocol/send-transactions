@@ -4,7 +4,7 @@ import type { APIRoute, Params } from 'astro'
 import { Contract, isAddress, type TransactionResponse } from 'ethers'
 
 import { send } from 'utils/tx'
-// import { auth } from 'utils/auth'
+import { auth } from 'utils/auth'
 import { json, headers } from 'utils/json'
 import { createWallet } from 'utils/wallet'
 import { generateTransactionKey } from 'utils/db'
@@ -41,10 +41,8 @@ export const POST: APIRoute = async ({
 	const isValidAuth = whenNotError(
 		request,
 		(_request) =>
-			whenDefined(
-				_request,
-				(_r) => (_r ? true : new Error('Auth failed')),
-				// auth(_r) ? true : new Error('Auth failed'),
+			whenDefined(_request, (_r) =>
+				auth(_r) ? true : new Error('Auth failed'),
 			) ?? new Error('Auth failed'),
 	)
 	const isParamValid = whenNotError(
