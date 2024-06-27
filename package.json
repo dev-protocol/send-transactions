@@ -1,8 +1,8 @@
 {
-	"name": "template-repos-ts",
+	"name": "@devprotocol/send-transactions",
 	"version": "1.0.0",
 	"type": "module",
-	"description": "Template repository for using TypeScript",
+	"description": "DEV protocol utility API for sending on-chain transactions.",
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
