@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-expression-statements */
 import { always } from 'ramda'
 import { createClient } from 'redis'
 import type { APIRoute, Params } from 'astro'
@@ -52,7 +53,7 @@ export const POST: APIRoute = async ({
 				isAddress(_p.contract) ? true : new Error('Bad request data'),
 			) ?? new Error('Bad request data'),
 	)
-
+	console.log('HERE1')
 	const data = await whenNotErrorAll(
 		[isValidAuth, request],
 		async ([_iVA, _request]) =>
@@ -80,7 +81,7 @@ export const POST: APIRoute = async ({
 							.catch((err) => new Error(err))
 			}) ?? new Error('Invalid metadata'),
 	)
-
+	console.log('HERE2')
 	const sbtContractAddress = whenNotErrorAll(
 		[isParamValid, params],
 		([_iPV, _params]) =>
@@ -90,17 +91,17 @@ export const POST: APIRoute = async ({
 					: _p.contract
 			}) ?? new Error('Invalid sbt contract address'),
 	)
-
+	console.log('HERE3')
 	const wallet = whenNotErrorAll(
 		[data],
 		([{ rpcUrl }]) => createWallet({ rpcUrl }) ?? new Error('Wallet error'),
 	)
-
+	console.log('HERE4')
 	const contract = whenNotErrorAll(
 		[sbtContractAddress, wallet],
 		([addr, wal]) => new Contract(addr, abi, wal),
 	)
-
+	console.log('HERE5')
 	const redis = await whenNotError(
 		createClient({
 			url: REDIS_URL,
@@ -113,7 +114,7 @@ export const POST: APIRoute = async ({
 				.then(always(db))
 				.catch((err) => new Error(err)),
 	)
-
+	console.log('HERE6')
 	const encodedMetadata = await whenNotErrorAll(
 		[contract, wallet, data, redis],
 		async ([contract_, , { metadata }]) => {
@@ -129,7 +130,7 @@ export const POST: APIRoute = async ({
 				.catch((err: Error) => err)
 		},
 	)
-
+	console.log('HERE7')
 	const tx = await whenNotErrorAll(
 		[contract, wallet, data, redis, encodedMetadata],
 		async ([
@@ -153,7 +154,7 @@ export const POST: APIRoute = async ({
 				.catch((err: Error) => err)
 		},
 	)
-
+	console.log('HERE8')
 	const sbtMintLog = await whenNotErrorAll(
 		[contract, tx],
 		async ([contract_, tx_]) => {
@@ -166,7 +167,7 @@ export const POST: APIRoute = async ({
 						new Error('SBT Mint log not found')
 		},
 	)
-
+	console.log('HERE9')
 	const sbtToBeMinted = whenNotErrorAll(
 		[tx, sbtMintLog],
 		([tx_, sbtMintLog_]) =>
@@ -174,7 +175,7 @@ export const POST: APIRoute = async ({
 				Number(ml.args.at(0).toString()),
 			) ?? new Error('SBT minted not found'),
 	)
-
+	console.log('HERE10')
 	const saved = await whenNotErrorAll(
 		[tx, redis, data, sbtContractAddress, sbtToBeMinted],
 		([_tx, db, { reqId }, ,]) =>
@@ -185,14 +186,14 @@ export const POST: APIRoute = async ({
 				'Missing TransactionResponse field to save the transaction: .to, .data',
 			),
 	)
-
+	console.log('HERE11')
 	const result = await whenNotErrorAll([redis], ([db]) =>
 		db
 			.quit()
 			.then((x) => x)
 			.catch((err: Error) => err),
 	)
-
+	console.log('HERE12')
 	return result instanceof Error ||
 		sbtToBeMinted instanceof Error ||
 		saved instanceof Error
