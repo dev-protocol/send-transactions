@@ -1,6 +1,6 @@
 {
 	"name": "@devprotocol/send-transactions",
-	"version": "1.0.0",
+	"version": "1.0.1-beta.1",
 	"type": "module",
 	"description": "DEV protocol utility API for sending on-chain transactions.",
 	"scripts": {
