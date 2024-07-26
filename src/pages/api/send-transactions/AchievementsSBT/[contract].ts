@@ -68,13 +68,13 @@ export const POST: APIRoute = async ({
 										reqId: string
 										rpcUrl: string
 										chainId: number
-										metadata: {
+										metadata: Partial<{
 											name: string
 											description: string
 											image: string
 											numberAttributes: NumberAttribute[]
 											stringAttributes: StringAttribute[]
-										}
+										}>
 										to: string
 									},
 							)
@@ -120,11 +120,11 @@ export const POST: APIRoute = async ({
 		async ([contract_, , { metadata }]) => {
 			return await contract_
 				.getFunction('encodeMetadata')(
-					metadata.name,
-					metadata.description,
-					metadata.stringAttributes,
-					metadata.numberAttributes,
-					metadata.image,
+					metadata.name ?? '',
+					metadata.description ?? '',
+					metadata.stringAttributes ?? [],
+					metadata.numberAttributes ?? [],
+					metadata.image ?? '',
 				)
 				.then((res: string) => res)
 				.catch((err: Error) => err)
@@ -161,10 +161,10 @@ export const POST: APIRoute = async ({
 			const txReceipt = await tx_.wait(1)
 			return !txReceipt
 				? new Error('Invalid tx receipt')
-				: txReceipt.logs
+				: (txReceipt.logs
 						.map((log) => contract_.interface.parseLog(log))
 						.find((log) => log?.name === 'Minted') ??
-						new Error('SBT Mint log not found')
+						new Error('SBT Mint log not found'))
 		},
 	)
 	console.log('HERE9', { sbtMintLog })
