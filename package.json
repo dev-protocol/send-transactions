@@ -40,7 +40,7 @@
 		"@typescript-eslint/parser": "8.5.0",
 		"@vercel/node": "^3.0.0",
 		"dotenv": "16.4.5",
-		"eslint": "8.57.0",
+		"eslint": "8.57.1",
 		"eslint-config-prettier": "9.1.0",
 		"eslint-plugin-functional": "6.6.1",
 		"husky": "9.1.6",
