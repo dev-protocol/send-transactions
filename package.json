@@ -47,7 +47,7 @@
 		"prettier": "3.3.3",
 		"rimraf": "5.0.10",
 		"type-fest": "^4.10.2",
-		"typescript": "5.6.2",
+		"typescript": "5.6.3",
 		"vitest": "^2.0.0"
 	},
 	"repository": "git+https://github.com/dev-protocol/template-repos-ts.git",
