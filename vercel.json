@@ -1,0 +1,7 @@
+{
+	"functions": {
+		"src/pages/api/send-transactions/AchievementsSBT/*": {
+			"maxDuration": 300
+		}
+	}
+}
