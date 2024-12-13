@@ -103,7 +103,7 @@
     is-wsl "^3.0.0"
     which-pm-runs "^1.1.0"
 
-"@astrojs/vercel@^8.0.0":
+"@astrojs/vercel@8.0.0":
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/@astrojs/vercel/-/vercel-8.0.0.tgz#31c729d3094702ab9f37b5269eab476416d11cf3"
   integrity sha512-JEVt/J9NJ0unMCLh2fCOvr9M6Mugph3SoNSzaRLR88hA6ckakHabSAMyd8fTFy4pogPH/puyQkiKak7nsHyM6g==
