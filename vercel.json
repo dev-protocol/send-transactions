@@ -1,6 +1,6 @@
 {
 	"functions": {
-		"pages/api/send-transactions/**/*.ts": {
+		"api/send-transactions/**/*.ts": {
 			"maxDuration": 300
 		}
 	}
