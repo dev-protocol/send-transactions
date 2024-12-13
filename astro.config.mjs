@@ -2,6 +2,7 @@ import { config } from 'dotenv'
 import { defineConfig } from 'astro/config'
 import vercel from '@astrojs/vercel/serverless'
 
+// eslint-disable-next-line functional/no-expression-statements
 config()
 
 export default defineConfig({
@@ -9,5 +10,7 @@ export default defineConfig({
 		port: 3000,
 	},
 	output: 'server',
-	adapter: vercel(),
+	adapter: vercel({
+		maxDuration: 300,
+	}),
 })
