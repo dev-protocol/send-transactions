@@ -1493,10 +1493,10 @@
   resolved "https://registry.yarnpkg.com/@vercel/analytics/-/analytics-1.4.1.tgz#a28a93133d68b6e3d86884a52fa7893f5ecaa381"
   integrity sha512-ekpL4ReX2TH3LnrRZTUKjHHNpNy9S1I7QmS+g/RQXoSUQ8ienzosuX7T9djZ/s8zPhBx1mpHP/Rw5875N+zQIQ==
 
-"@vercel/build-utils@9.2.1":
-  version "9.2.1"
-  resolved "https://registry.yarnpkg.com/@vercel/build-utils/-/build-utils-9.2.1.tgz#98a35ae7b00eff0327d9bc9a20943b1bc94861b3"
-  integrity sha512-dSem9aFudxQ723BeJ/tTCiOnWn4jH3UMYvnlGvb2ke/OBTqLcyCvqKyxnUNWsq++i0x/YewiI/HLnjAwyo2hnA==
+"@vercel/build-utils@10.0.1":
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/@vercel/build-utils/-/build-utils-10.0.1.tgz#ddc0a8d5c17ec6181fa5a20647ea1c460cbe9d8f"
+  integrity sha512-UcmSbYmdWCBojUHD2SYZ5KP1iUAZsbqWfTILo2evbwAk/A7eEAL0y6mgE+KDC/6nFhsHRRdg0rnhyG9opJMRQw==
 
 "@vercel/edge@^1.1.2":
   version "1.1.2"
@@ -1545,15 +1545,15 @@
     resolve-from "^5.0.0"
 
 "@vercel/node@^5.0.0":
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/@vercel/node/-/node-5.1.2.tgz#e0eda9be492084476838dd797ebac4f575197446"
-  integrity sha512-zoIs8dpx5ScWSgkpxCX2umwt5rPfmqtvdARULXgtBKb8elh3oMKPtQGT9aui6M1d+fr/fewfdTrQJvrDrvdIrQ==
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@vercel/node/-/node-5.1.6.tgz#5aca7684fab0fc94a861315acdc114668f1da3eb"
+  integrity sha512-1cUwgGckpi3l4m4qx0wWit4eIMKjLADaOEBKvziiJdx/XPQXlD0xoAFrHvqLNcwY6hoFsbBzFhIZYBiNBTds+A==
   dependencies:
     "@edge-runtime/node-utils" "2.3.0"
     "@edge-runtime/primitives" "4.1.0"
     "@edge-runtime/vm" "3.2.0"
     "@types/node" "16.18.11"
-    "@vercel/build-utils" "9.2.1"
+    "@vercel/build-utils" "10.0.1"
     "@vercel/error-utils" "2.0.3"
     "@vercel/nft" "0.27.10"
     "@vercel/static-config" "3.0.0"
@@ -1564,6 +1564,8 @@
     esbuild "0.14.47"
     etag "1.8.1"
     node-fetch "2.6.9"
+    path-to-regexp "6.1.0"
+    path-to-regexp-updated "npm:path-to-regexp@6.3.0"
     ts-morph "12.0.0"
     ts-node "10.9.1"
     typescript "4.9.5"
@@ -4245,6 +4247,16 @@ path-scurry@^1.11.1:
   dependencies:
     lru-cache "^10.2.0"
     minipass "^5.0.0 || ^6.0.2 || ^7.0.0"
+
+"path-to-regexp-updated@npm:path-to-regexp@6.3.0":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-6.3.0.tgz#2b6a26a337737a8e1416f9272ed0766b1c0389f4"
+  integrity sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==
+
+path-to-regexp@6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-6.1.0.tgz#0b18f88b7a0ce0bfae6a25990c909ab86f512427"
+  integrity sha512-h9DqehX3zZZDCEm+xbfU0ZmwCGFCAAraPJWMXJ4+v32NjZJilVg3k1TcKsRgIb8IQ/izZSaydDc1OhJCZvs2Dw==
 
 path-type@^4.0.0:
   version "4.0.0"
