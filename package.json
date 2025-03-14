@@ -12,10 +12,10 @@
 		"test:ci": "vitest --run",
 		"prebuild": "rimraf dist",
 		"lint": "yarn lint:eslint && yarn lint:format",
-		"lint:eslint": "eslint . --ext .ts,.js --fix",
+		"lint:eslint": "eslint . --fix",
 		"lint:format": "prettier --write '**/*.{ts,js,json,md,yml}'",
 		"typecheck": "astro check && tsc --noEmit",
-		"prepare": "husky install"
+		"prepare": "husky"
 	},
 	"author": "Dev Protocol",
 	"license": "MPL-2.0",
@@ -33,21 +33,22 @@
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.0",
-		"@types/dotenv": "8.2.3",
+		"@eslint/js": "^9.22.0",
+		"@types/eslint-config-prettier": "^6.11.3",
 		"@types/node": "22.13.10",
 		"@types/ramda": "0.30.2",
-		"@typescript-eslint/eslint-plugin": "8.26.1",
-		"@typescript-eslint/parser": "8.26.1",
 		"@vercel/node": "^5.0.0",
 		"dotenv": "16.4.7",
-		"eslint": "8.57.1",
-		"eslint-config-prettier": "10.1.1",
-		"eslint-plugin-functional": "6.6.1",
+		"eslint": "^9.22.0",
+		"eslint-config-prettier": "^10.1.1",
+		"eslint-plugin-functional": "^9.0.1",
+		"globals": "^16.0.0",
 		"husky": "9.1.7",
 		"prettier": "3.5.3",
 		"rimraf": "5.0.10",
 		"type-fest": "^4.10.2",
 		"typescript": "5.8.2",
+		"typescript-eslint": "^8.26.1",
 		"vitest": "^3.0.0"
 	},
 	"repository": "git+https://github.com/dev-protocol/template-repos-ts.git",
@@ -55,5 +56,6 @@
 		"url": "https://github.com/dev-protocol/template-repos-ts/issues"
 	},
 	"homepage": "https://github.com/dev-protocol/template-repos-ts#readme",
-	"private": true
+	"private": true,
+	"packageManager": "yarn@4.7.0"
 }

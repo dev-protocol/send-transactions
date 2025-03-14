@@ -17,10 +17,8 @@ import { createClient } from 'redis'
 import { generateTransactionKey } from './db'
 import pRetry from 'p-retry'
 
-// eslint-disable-next-line functional/type-declaration-immutability
 type ContractMethod = Readonly<Contract['']>
 
-// eslint-disable-next-line functional/type-declaration-immutability
 export type PropsSend = ReadonlyDeep<{
 	contract: Contract
 	method: string
@@ -39,7 +37,6 @@ export type PropsSend = ReadonlyDeep<{
 	requestId?: string
 }>
 
-// eslint-disable-next-line functional/type-declaration-immutability
 type PropsCreateTx = Omit<
 	PropsSend,
 	'contract' | 'method' | 'signer' | 'redis' | 'requestId'
@@ -48,7 +45,6 @@ type PropsCreateTx = Omit<
 		contractMethod: ContractMethod
 	}>
 
-// eslint-disable-next-line functional/type-declaration-immutability
 type PropsPureTx = ReadonlyDeep<{
 	contractMethod: ContractMethod
 	args: unknown[]
@@ -252,11 +248,10 @@ export const send = async ({
 			// eslint-disable-next-line functional/no-expression-statements
 			console.log('retry #', attemptNumber, sentTx)
 
-			// eslint-disable-next-line functional/no-conditional-statements
 			if (sentTx instanceof Error) {
 				// eslint-disable-next-line functional/no-expression-statements
 				await new Promise((resolve) => setTimeout(resolve, interval))
-				// eslint-disable-next-line functional/no-throw-statements
+
 				throw sentTx
 			}
 			return sentTx
