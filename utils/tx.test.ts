@@ -46,9 +46,7 @@ vi.mock('JsonRpcProvider', () => {
 describe('send', () => {
 	describe('Normal cases', () => {
 		const redis = createClient()
-		const provider = new JsonRpcProvider(
-			'https://polygon-amoy-bor-rpc.publicnode.com',
-		)
+		const provider = new JsonRpcProvider('https://rpc-amoy.polygon.technology/')
 		const signer = Wallet.createRandom().connect(provider)
 		vi.spyOn(signer, 'sendTransaction').mockImplementation(
 			async (tx: TransactionRequest) => {
@@ -76,7 +74,7 @@ describe('send', () => {
 				method: 'transfer',
 				signer,
 				chainId: 80001,
-				rpcUrl: 'https://polygon-amoy-bor-rpc.publicnode.com', // Amoy.
+				rpcUrl: 'https://rpc-amoy.polygon.technology/', // Amoy.
 				args: [signer.address, 0n],
 				requestId: 'id',
 				redis,
