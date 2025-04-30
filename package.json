@@ -29,7 +29,7 @@
 		"ethers": "^6.7.1",
 		"p-retry": "^6.2.0",
 		"ramda": "0.30.1",
-		"redis": "^4.6.8"
+		"redis": "^5.0.0"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.0",
