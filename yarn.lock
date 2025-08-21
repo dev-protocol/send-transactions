@@ -427,7 +427,7 @@ __metadata:
     ethers: "npm:^6.7.1"
     globals: "npm:^16.0.0"
     husky: "npm:9.1.7"
-    p-retry: "npm:^6.2.0"
+    p-retry: "npm:^7.0.0"
     prettier: "npm:3.6.2"
     ramda: "npm:0.31.3"
     redis: "npm:^5.0.0"
@@ -1986,13 +1986,6 @@ __metadata:
   dependencies:
     types-ramda: "npm:^0.31.0"
   checksum: 10c0/d979b1eb08e7b614369622675c6c0c5dde6e7c232c0fbff1b6975a771a2ea2e663ccad27779486b4942e29a832f10da7afd53994c4638559ecdd69ea8d4fd35b
-  languageName: node
-  linkType: hard
-
-"@types/retry@npm:0.12.2":
-  version: 0.12.2
-  resolution: "@types/retry@npm:0.12.2"
-  checksum: 10c0/07481551a988cc90b423351919928b9ddcd14e3f5591cac3ab950851bb20646e55a10e89141b38bc3093d2056d4df73700b22ff2612976ac86a6367862381884
   languageName: node
   linkType: hard
 
@@ -4900,7 +4893,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-network-error@npm:^1.0.0":
+"is-network-error@npm:^1.1.0":
   version: 1.1.0
   resolution: "is-network-error@npm:1.1.0"
   checksum: 10c0/89eef83c2a4cf43d853145ce175d1cf43183b7a58d48c7a03e7eed4eb395d0934c1f6d101255cdd8c8c2980ab529bfbe5dd9edb24e1c3c28d2b3c814469b5b7d
@@ -6206,14 +6199,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-retry@npm:^6.2.0":
-  version: 6.2.1
-  resolution: "p-retry@npm:6.2.1"
+"p-retry@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "p-retry@npm:7.0.0"
   dependencies:
-    "@types/retry": "npm:0.12.2"
-    is-network-error: "npm:^1.0.0"
-    retry: "npm:^0.13.1"
-  checksum: 10c0/10d014900107da2c7071ad60fffe4951675f09930b7a91681643ea224ae05649c05001d9e78436d902fe8b116d520dd1f60e72e091de097e2640979d56f3fb60
+    is-network-error: "npm:^1.1.0"
+  checksum: 10c0/3c090ac72bbe00fd2f062ee6178c44f7302f298936ab2290a458575e73650e7834b556beb2b09fa9fbebedab2ec3358cb474c09710cf828972b670c3c0cb89e4
   languageName: node
   linkType: hard
 
@@ -6790,13 +6781,6 @@ __metadata:
   version: 0.12.0
   resolution: "retry@npm:0.12.0"
   checksum: 10c0/59933e8501727ba13ad73ef4a04d5280b3717fd650408460c987392efe9d7be2040778ed8ebe933c5cbd63da3dcc37919c141ef8af0a54a6e4fca5a2af177bfe
-  languageName: node
-  linkType: hard
-
-"retry@npm:^0.13.1":
-  version: 0.13.1
-  resolution: "retry@npm:0.13.1"
-  checksum: 10c0/9ae822ee19db2163497e074ea919780b1efa00431d197c7afdb950e42bf109196774b92a49fc9821f0b8b328a98eea6017410bfc5e8a0fc19c85c6d11adb3772
   languageName: node
   linkType: hard
 
