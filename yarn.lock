@@ -6230,11 +6230,11 @@ __metadata:
   linkType: hard
 
 "p-retry@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "p-retry@npm:7.0.0"
+  version: 7.1.0
+  resolution: "p-retry@npm:7.1.0"
   dependencies:
     is-network-error: "npm:^1.1.0"
-  checksum: 10c0/3c090ac72bbe00fd2f062ee6178c44f7302f298936ab2290a458575e73650e7834b556beb2b09fa9fbebedab2ec3358cb474c09710cf828972b670c3c0cb89e4
+  checksum: 10c0/fe756dac411bd104901b383f6b95214f453a5f5aa4e289d3642b937c62cf4fcfc77f6276b570388a686b2923af6d43e71b29c3b2abe062cb7070176d00627081
   languageName: node
   linkType: hard
 
