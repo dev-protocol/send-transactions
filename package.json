@@ -27,7 +27,7 @@
 		"bignumber.js": "^10.0.0",
 		"cross-fetch": "^4.0.0",
 		"ethers": "^6.7.1",
-		"p-retry": "^7.0.0",
+		"p-retry": "^8.0.0",
 		"ramda": "0.32.0",
 		"redis": "^5.0.0"
 	},
